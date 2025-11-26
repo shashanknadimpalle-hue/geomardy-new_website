@@ -1,0 +1,2145 @@
+/* =========================================================
+   Geomardy - style.css (header-over-hero update)
+   - Header fixed to viewport and overlays hero video
+   - Hero pulled up to sit under header (no empty gap)
+   - Keeps hero text readable by shifting hero content down
+   - Retains dark marine palette, glass cards, sapphire CTAs
+   ========================================================= */
+
+/* -------------------------
+   Theme variables (semantic)
+   ------------------------- */
+:root {
+  --navH: 64px;
+  --max-width: 1200px;
+
+  /* primary palette */
+  --bg-dark: #041827;
+  --panel: #063a4f;
+  --cta: #0b6df0;
+  --cta-2: #055bd6;
+  --cta-accent: #38dfe8;
+
+  /* text semantics (new) */
+  --text-heading: #00ffff; /* headings, card titles */
+  --text-body: #cfeaf3eb; /* main paragraph/body text */
+  --text-muted: #cfeaf3ff; /* secondary/muted text */
+  --text-contrast: #ffffff; /* on dark CTA or high contrast */
+  --text-accent: #00ffff; /* bright accent if needed */
+
+  /* legacy alias for compatibility if some inline code expects it */
+  --text-light: var(--text-accent);
+
+  --muted-ink: #e7d7b7;
+
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-2: rgba(255, 255, 255, 0.04);
+  --video-overlay: rgba(0, 0, 0, 0.55);
+
+  --shadow-1: 0 3px 12px rgba(0, 0, 0, 0.55);
+  --shadow-2: 0 8px 28px rgba(0, 0, 0, 0.65);
+
+  --radius: 12px;
+  --transition-fast: 180ms ease;
+  --focus-ring: 0 0 0 0.18rem rgba(11, 109, 240, 0.14);
+}
+
+/* -------------------------
+   Global reset & base
+   ------------------------- */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-body);
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+a {
+  color: var(--cta);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--cta-accent);
+  text-decoration: underline;
+}
+
+/* NOTE: main.container has top padding to avoid header overlapping
+   non-hero pages. We'll keep it but adjust hero specifically. */
+main.container {
+  padding-top: calc(var(--navH) + 8px);
+}
+
+/* Centered container used site-wide */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* Sections */
+.section {
+  padding: 3.5rem 0;
+}
+.section.py-5 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+/* -------------------------
+   Buttons
+   ------------------------- */
+.btn {
+  border-radius: 10px;
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast), filter var(--transition-fast);
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  line-height: 1;
+}
+.btn-primary {
+  background: linear-gradient(180deg, var(--cta), var(--cta-2));
+  border: 1px solid rgba(11, 109, 240, 0.18);
+  color: var(--text-contrast);
+  box-shadow: 0 6px 18px rgba(11, 109, 240, 0.12);
+  padding: 0.7rem 1.1rem;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(56, 223, 232, 0.1);
+  outline: none;
+}
+.btn-outline-contrast {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-contrast);
+}
+.btn-outline-contrast:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.btn-lg {
+  font-size: 1.02rem;
+  padding: 0.8rem 1.4rem;
+}
+
+/* -------------------------
+   Hero / video
+   ------------------------- */
+.hero-viewport,
+.ecosystem-hero,
+.about-hero,
+.division-hero,
+.contact-hero {
+  position: relative;
+  width: 100%;
+  min-height: 56vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* video behaves like background */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* hero overlay */
+.hero-overlay,
+.about-hero .hero-overlay,
+.division-hero .hero-overlay,
+.contact-hero .hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
+  pointer-events: none;
+}
+
+/* hero content on top */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  color: var(--text-body);
+  text-align: center;
+  width: 100%;
+  padding: 3rem 1rem;
+}
+
+/* small readability layer behind text */
+.hero-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  height: 100%;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border-radius: 5px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Pull the hero up so its top sits underneath the fixed header.
+   Then add equivalent padding to the hero so the content doesn't hide
+   behind the header. This removes the empty gap but preserves readability. */
+.hero-viewport {
+  margin-top: calc(-1 * (var(--navH) + 8px)); /* pulls hero up under header */
+  padding-top: calc(
+    var(--navH) + 8px
+  ); /* pushes hero content down to remain visible */
+}
+
+/* hero typography */
+.hero-title {
+  font-size: clamp(1.6rem, 4.8vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.6rem;
+  color: var(--text-heading);
+  text-shadow: 0 8px 30px rgba(4, 12, 18, 0.7);
+}
+.hero-sub {
+  color: var(--text-body);
+  margin: 0 auto 1.25rem;
+  max-width: 760px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.67);
+}
+
+/* ============================
+   Global hero text styling (site-wide)
+   Applies across index, about, capabilities, divisions, etc.
+   ============================ */
+
+.hero-title {
+  color: var(--text-heading);
+  font-weight: 800;
+  text-shadow: 0 6px 28px rgba(2, 10, 14, 0.75);
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  /* keep existing responsive sizing */
+}
+
+/* subtitle / supporting line */
+.hero-sub {
+  color: var(--text-body); /* soft aqua for readability */
+  font-weight: 500;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.55);
+  margin-top: 0.5rem;
+  max-width: 900px;
+}
+
+/* smaller screens — keep contrast readable */
+@media (max-width: 768px) {
+  .hero-title {
+    text-shadow: 0 4px 18px rgba(2, 10, 14, 0.7);
+  }
+  .hero-sub {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* -------------------------
+   Cards & Glass UI
+   ------------------------- */
+.card,
+.panel,
+.glass-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-body);
+  box-shadow: var(--shadow-1);
+  border-radius: var(--radius);
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+.card:hover,
+.glass-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-2);
+}
+.card .card-body,
+.glass-card .card-body {
+  padding: 1.25rem;
+}
+.panel-tinted {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 58, 79, 0.9),
+    rgba(4, 30, 44, 0.9)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* -------------------------
+   Header / Navbar (fixed overlay)
+   ------------------------- */
+/* Use fixed so header is always above hero and other content */
+.navbar-sticky {
+  position: fixed; /* fixed so it overlays content */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 6000; /* ensure header remains above hero/video */
+  transition: background var(--transition-fast),
+    backdrop-filter var(--transition-fast), box-shadow var(--transition-fast);
+  background: rgba(3, 24, 44, 0.72) !important; /* semi-transparent navy */
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  padding: 0.6rem 0;
+  width: 100%;
+  pointer-events: auto; /* keep header interactive when overlapping hero */
+}
+
+/* Force header inner container to match site container exactly */
+.navbar-sticky .container,
+.navbar > .container,
+.navbar > .container-fluid {
+  max-width: var(--max-width) !important;
+  margin: 0 auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Brand text (all-caps, polished spacing) */
+.navbar-sticky .navbar-brand {
+  font-weight: 800;
+  color: var(--text-contrast);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  letter-spacing: 1px;
+  font-size: 1.05rem;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+/* Keep GEOMARDY left and push nav to the right */
+.navbar-sticky .navbar-brand {
+  margin-right: auto !important;
+}
+.navbar-sticky .navbar-nav {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+.navbar-sticky .nav-link {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ============================
+   NAV DROPDOWN FIX + DEBUG
+   ============================ */
+
+/* Ensure dropdown text is readable on dark glass background */
+.navbar-sticky .dropdown-menu {
+  background: rgba(7, 28, 40, 0.98) !important;
+  color: var(--text-body) !important; /* inherited body color */
+  border: 1px solid rgba(255, 255, 255, 0.03) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6) !important;
+  z-index: 7000 !important; /* ensure above hero/video */
+}
+
+/* Force each item to be light and high-contrast */
+.navbar-sticky .dropdown-menu .dropdown-item {
+  color: var(--text-body) !important;
+  background: transparent !important;
+  transition: background 160ms ease, color 120ms ease;
+}
+
+/* Hover / focus / keyboard */
+.navbar-sticky .dropdown-menu .dropdown-item:hover,
+.navbar-sticky .dropdown-menu .dropdown-item:focus {
+  color: var(--text-contrast) !important; /* white */
+  background: rgba(255, 255, 255, 0.04) !important;
+  outline: none;
+}
+
+/* Active state (clicked / keyboard select) */
+.navbar-sticky .dropdown-menu .dropdown-item.active,
+.navbar-sticky .dropdown-menu .dropdown-item:active {
+  color: var(--text-contrast) !important;
+  background: linear-gradient(180deg, var(--cta), var(--cta-2)) !important;
+  box-shadow: 0 6px 18px rgba(11, 109, 240, 0.12) !important;
+}
+
+/* If you use .dropdown-item:visited or other states, ensure readability */
+.navbar-sticky .dropdown-menu .dropdown-item:visited {
+  color: var(--text-body) !important;
+}
+
+/* Small visual debug hint — toggles when menu is shown.
+   Remove / comment out once you're happy. */
+.navbar-sticky .dropdown-menu.show {
+  outline: 2px solid rgba(56, 223, 232, 0.08);
+  /* optional debug color tint (comment out for production): */
+  /* background: linear-gradient(180deg, rgba(7,28,40,0.98), rgba(3,34,50,0.98)) !important; */
+}
+
+/* Accessibility: keyboard focus visible */
+.navbar-sticky .dropdown-menu .dropdown-item:focus {
+  box-shadow: var(--focus-ring);
+}
+
+/* If any other CSS is still winning, the following ultra-specific selector will force color.
+   Keep this as a last-resort line. Uncomment only when necessary. */
+/* .navbar-sticky .dropdown-menu .dropdown-item, 
+   .navbar-sticky .dropdown-menu .dropdown-item:link,
+   .navbar-sticky .dropdown-menu .dropdown-item:visited {
+     color: var(--text-body) !important;
+} */
+
+/* ============================
+   Dropdown-toggle (nav) — ensure visible when open/selected
+   ============================ */
+
+/* Default nav-link remains as-is (light) — keep for safety */
+.navbar-sticky .nav-link {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* When the dropdown is open, Bootstrap adds .show to the parent <li>.
+   Make sure the toggle text is high-contrast. */
+.navbar-sticky .nav-item.show > .nav-link,
+.navbar-sticky .nav-link.dropdown-toggle[aria-expanded="true"] {
+  color: var(--text-contrast) !important; /* white */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+/* Hover / focus / keyboard visibility for the toggle */
+.navbar-sticky .nav-link.dropdown-toggle:hover,
+.navbar-sticky .nav-link.dropdown-toggle:focus,
+.navbar-sticky .nav-link.dropdown-toggle:active {
+  color: var(--text-contrast) !important;
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* If your JS toggles a `scrolled` class on the navbar, ensure the open state still shows */
+.navbar-sticky.scrolled .nav-item.show > .nav-link,
+.navbar-sticky.scrolled .nav-link.dropdown-toggle[aria-expanded="true"] {
+  color: var(--text-contrast) !important;
+}
+
+/* Rare last-resort: if some inline style or overly-specific rule still wins,
+   use this ultra-specific rule (uncomment only if needed). */
+/* .navbar-sticky.navbar .nav-item.show > a.nav-link.dropdown-toggle[aria-expanded="true"] {
+     color: var(--text-contrast) !important;
+} */
+
+/* ---------------------------
+   Force dropdown toggle visible
+   --------------------------- */
+/* high-specificity selector ensures it wins over any bootstrap rule */
+.navbar-sticky .nav-item.dropdown.show > .nav-link,
+.navbar-sticky .nav-link.dropdown-toggle[aria-expanded="true"],
+.navbar-sticky .nav-link.dropdown-toggle:focus,
+.navbar-sticky .nav-link.dropdown-toggle:active,
+.navbar-sticky .nav-link.dropdown-toggle:hover,
+.navbar-sticky .nav-link.dropdown-toggle:visited,
+.navbar-sticky .nav-link.dropdown-toggle[aria-pressed="true"] {
+  color: var(--text-contrast) !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Extra last-resort specific rule if any inline/third-party rules still win */
+.navbar-sticky.navbar
+  .nav-item.dropdown.show
+  > a.nav-link.dropdown-toggle[aria-expanded="true"] {
+  color: var(--text-contrast) !important;
+}
+
+/* ---------------------------
+   Insights cards & article detail readability
+   --------------------------- */
+
+/* card wrapper (keeps text readable on top of image) */
+.insight-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    rgba(3, 24, 44, 0.88),
+    rgba(3, 24, 44, 0.78)
+  );
+  color: var(--text-body);
+}
+
+/* image strip and image area */
+.insight-image {
+  width: 100%;
+  height: 180px;
+  background-position: center;
+  background-size: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* content area sits above the dark gradient */
+.insight-content {
+  color: var(--text-body);
+  background: transparent;
+}
+
+/* read-more highlight */
+.insight-content .read-more {
+  color: var(--cta);
+  font-weight: 600;
+}
+
+/* small meta date colour */
+.insight-card .text-muted {
+  color: rgba(207, 234, 243, 0.65) !important;
+}
+
+/* insight detail: ensure date is visible */
+.insight-detail .text-muted {
+  color: rgba(207, 234, 243, 0.6) !important;
+}
+
+/* blockquote contrast fix in insight detail */
+.insight-detail blockquote.bg-light {
+  background: #f3f7f9 !important;
+  color: rgba(3, 24, 44, 0.92) !important;
+  border-left-color: rgba(11, 109, 240, 0.9) !important;
+}
+
+/* case-studies image strip (new element) */
+.case-image-strip {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+.case-image-strip .strip-item {
+  min-width: 260px;
+  height: 160px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+  cursor: pointer;
+  position: relative;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.case-image-strip .strip-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.case-image-strip .strip-item:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: var(--shadow-2);
+}
+
+/* ensure modal image fits nicely */
+#caseLightbox .modal-dialog {
+  max-width: 920px;
+}
+#caseLightbox .modal-body img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* small accessibility: hide outline only when mouse is used */
+.case-image-strip .strip-item:focus {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* CSS marquee carousel (seamless) */
+.marquee-wrap {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  --marquee-duration: 36s; /* tweak speed: larger = slower */
+  --gap: 1rem;
+}
+
+.marquee-track {
+  display: flex;
+  gap: var(--gap);
+  align-items: center;
+  /* length must be at least 200% of content because we duplicated the set */
+  animation: marquee linear infinite;
+  animation-duration: var(--marquee-duration);
+  will-change: transform;
+}
+
+/* keyframe moves left by half the track width (since content duplicated) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* each item visual */
+.marquee-track .strip-item {
+  min-width: 260px;      /* same as your previous setting */
+  height: 160px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.marquee-track .strip-item img { width: 100%; height: 100%; object-fit: cover; display:block; }
+
+/* pause on hover/focus (pure CSS) */
+.marquee-wrap:hover .marquee-track,
+.marquee-wrap:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ensure clones don’t receive tab stops */
+.marquee-track .clone [tabindex] { outline: none; pointer-events: none; }
+
+/* responsive tweak */
+@media (max-width: 768px) {
+  .marquee-track .strip-item { min-width: 200px; height: 130px; }
+  .marquee-wrap { --marquee-duration: 24s; } /* faster on small screens */
+}
+
+/* ============================
+   Header left/right padding tuning
+   ============================ */
+
+/* Corrected header spacing without breaking vertical alignment */
+.navbar-sticky .container {
+  padding-left: 2rem !important; /* default safe spacing */
+  padding-right: 2rem !important;
+  height: var(--navH);
+  display: flex;
+  align-items: center; /* ★ ensures brand + nav stay perfectly aligned */
+}
+
+/* Extra space after last nav item */
+.navbar-sticky .navbar-nav {
+  padding-right: 0.5rem; /* increase to 1rem or 1.5rem if you want more space */
+}
+
+/* Extra spacing between GEOMARDY and first nav link */
+.navbar-sticky .navbar-brand {
+  margin-right: 2rem !important; /* adjust spacing between logo and menu */
+}
+
+/* dropdown styling */
+.navbar-sticky .dropdown-menu {
+  background: rgba(7, 28, 40, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  color: var(--text-body);
+}
+
+.navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.navbar-toggler-icon {
+  filter: brightness(10);
+}
+
+/* On scroll: slightly darker for contrast */
+.navbar-sticky.scrolled {
+  background: rgba(3, 24, 44, 0.88) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.navbar-sticky.scrolled .navbar-brand,
+.navbar-sticky.scrolled .nav-link {
+  color: var(--text-contrast) !important;
+}
+
+/* -------------------------
+   Footer
+   ------------------------- */
+.site-footer,
+footer.site-footer,
+.site-footer-legacy {
+  background: linear-gradient(180deg, rgba(4, 18, 28, 1), rgba(2, 12, 18, 1));
+  color: var(--text-body);
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+  padding: 3rem 0;
+}
+.site-footer a {
+  color: rgba(2, 12, 18, 1);
+}
+.site-footer a:hover {
+  color: var(--cta-accent);
+}
+.site-footer .small {
+  color: var(--text-muted);
+}
+.site-footer strong {
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Footer CTA */
+.footer-cta {
+  background: linear-gradient(
+    180deg,
+    rgba(3, 34, 50, 0.85),
+    rgba(4, 26, 39, 0.95)
+  );
+  color: var(--text-body);
+  padding: 3rem 0;
+  text-align: center;
+}
+.footer-cta .btn-primary {
+  box-shadow: 0 8px 30px rgba(11, 109, 240, 0.12);
+}
+
+/* Quick-value strip fix */
+.section.py-5.bg-light {
+  background: var(--bg-dark) !important;
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+.section.py-5.bg-light .card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.02)
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: var(--text-body) !important;
+  box-shadow: var(--shadow-1) !important;
+}
+.section.py-5.bg-light .card h5 {
+  color: var(--text-contrast) !important;
+  font-weight: 700 !important;
+}
+.section.py-5.bg-light .card p {
+  color: rgba(207, 234, 243, 0.85) !important;
+}
+
+/* Utilities & responsiveness */
+.text-center {
+  text-align: center;
+}
+.mt-4 {
+  margin-top: 1.5rem;
+}
+.mb-3 {
+  margin-bottom: 1rem;
+}
+.p-4 {
+  padding: 1rem;
+}
+.rounded {
+  border-radius: 8px;
+}
+.shadow-sm {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.fade-up {
+  transform: translateY(14px);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.45s ease;
+  will-change: transform, opacity;
+}
+.fade-up.in-view {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --max-width: 1000px;
+  }
+}
+@media (max-width: 768px) {
+  :root {
+    --navH: 56px;
+  }
+  .hero-title {
+    font-size: 1.6rem;
+  }
+  .hero-viewport {
+    min-height: 42vh;
+    margin-top: calc(-1 * (var(--navH) + 8px));
+    padding-top: calc(var(--navH) + 8px);
+  } /* keep behaviour on small screens */
+  .hero-sub {
+    padding: 0 1rem;
+    font-size: 0.95rem;
+  }
+  .insight-image {
+    height: 150px;
+  }
+}
+
+/* Accessibility focus */
+button,
+a.btn {
+  outline-offset: 3px;
+}
+a.btn:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: var(--focus-ring);
+  border-color: var(--cta);
+}
+
+/* Small overrides */
+.panel-tinted-strong {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 58, 79, 0.98),
+    rgba(4, 30, 44, 0.98)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  color: var(--text-body);
+}
+.badge-inverse {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-body);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 0.28rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+/* ============================================================
+   INDEX PAGE — CUSTOM ADDITIONS
+   ============================================================ */
+
+/* 1. Hero Request button uses ghost style */
+.btn-ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.65rem 1.1rem;
+  border-radius: 10px;
+  transition: all 0.18s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-contrast);
+  transform: translateY(-2px);
+}
+
+/* 2. Section border below hero */
+.section-border {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+/* 3. Division icons */
+.division-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+/* 4. Spotlight arrows with translucent circles */
+.custom-arrow-circle {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.custom-arrow-circle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+}
+
+/* 5. Spotlight card clickable */
+.carousel-item .card {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.carousel-item .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* 6. Footer CTA section (one-button only) */
+.page-footer-cta {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 58, 79, 0.98),
+    rgba(4, 30, 44, 0.98)
+  );
+  padding: 3rem 1rem;
+  text-align: center;
+  border-radius: 6px;
+}
+.page-footer-cta h3 {
+  color: #cfeaf3eb;
+  font-weight: 700;
+}
+.page-footer-cta p {
+  color: #cfeaf3eb;
+  opacity: 0.8;
+}
+.page-footer-cta .btn-ghost {
+  border-color: rgba(4, 32, 51, 0.25);
+  color: #cfeaf3eb;
+}
+.page-footer-cta .btn-ghost:hover {
+  background: rgba(4, 32, 51, 0.05);
+}
+
+/* ============================
+   Division icons - elegant circular look 
+   ============================ */
+
+/* Outer card adjustments allow icon overlap and centered presentation */
+.division-card {
+  padding-top: 3.5rem !important; /* room for the icon */
+  border-radius: 14px;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  position: relative;
+  overflow: visible; /* let the icon sit outside the card */
+}
+
+/* Circular frame that sits above the card — centered using margin auto */
+.division-icon-wrapper {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* softened glass / ring */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.01)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  /* shallow lift + inner tint for depth */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45),
+    0 3px 10px rgba(11, 109, 240, 0.03) inset;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  /* center above card */
+  margin: -56px auto 12px auto;
+  position: relative;
+  z-index: 6;
+  padding: 6px; /* inner padding to form the ring around the icon */
+}
+
+/* subtle decorative outer glow (keeps it elegant) */
+.division-icon-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  z-index: -1;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(11, 109, 240, 0.06),
+    rgba(3, 34, 50, 0.02) 40%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  opacity: 0.9;
+}
+
+/* the actual icon image inside the circular frame
+   - keep image itself compact and centered
+   - use SVG for crisp rendering (or PNG with transparent background)
+*/
+.division-icon {
+  width: 84px; /* visible icon size inside wrapper */
+  height: 84px;
+  display: block; /* removes inline spacing issues */
+  margin: 0; /* remove any automatic margins */
+  padding: 0;
+  object-fit: contain; /* maintain aspect ratio */
+  border-radius: 50%; /* safety: ensures circular crop */
+  background: transparent;
+  transform-origin: center;
+}
+
+/* hover polish — subtle pop */
+.division-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+.division-card:hover .division-icon-wrapper {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5);
+}
+
+/* textual spacing */
+.division-title {
+  margin-top: 0.35rem;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  color: var(--text-heading);
+  text-transform: none;
+}
+.division-desc {
+  margin: 0.75rem auto 1.25rem;
+  max-width: 520px;
+  color: rgba(207, 234, 243, 0.85);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* =========================
+   ABOUT PAGE — concise & elegant styles
+   (append these to style.css)
+   ========================= */
+
+/* give concise leads a slightly larger readable feel */
+.lead.concise {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-body);
+  max-width: 820px;
+  margin: 0.5rem auto 0;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* section heading polish */
+.section-heading {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--text-heading);
+  margin-bottom: 0.75rem;
+}
+
+/* S-shaped hero divider (SVG sits over page and blends into background) */
+.hero-s-divider {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px; /* overlap the hero and next section slightly */
+  width: 100%;
+  height: 72px;
+  z-index: 3;
+  pointer-events: none;
+}
+.hero-s-divider svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* s-divider video wrapper */
+.s-divider.s-divider--video {
+  position: relative;
+  width: 100%;
+  height: 120px; /* change as needed */
+  overflow: hidden;
+  pointer-events: none;
+  display: block;
+  background: transparent;
+}
+
+/* inline SVG: keep it in DOM but don't visually cover the video */
+.s-divider-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3; /* above video so clip-path is available to reference */
+  pointer-events: none;
+  visibility: hidden; /* keep it in DOM for clipPath but hide visuals */
+}
+
+/* Video fills the area and is clipped by the SVG clipPath */
+/* The clip-path url() must reference the inline SVG <clipPath> id exactly */
+.s-divider-video {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 120%; /* oversize to avoid seams on resize */
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  pointer-events: none;
+
+  /* critical: this must match the clipPath id from the inline SVG */
+  -webkit-clip-path: url(#sClipUser);
+  clip-path: url(#sClipUser);
+  /* keep a tiny fallback in case clip-path unsupported */
+  background: rgba(3, 24, 44, 0.95);
+}
+
+/* Fallback solid shape: show only when needed */
+.s-divider-fallback {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  display: none; /* enable (block) for fallback or debugging */
+}
+
+/* responsive tuning */
+@media (max-width: 1200px) {
+  .s-divider.s-divider--video {
+    height: 100px;
+  }
+}
+@media (max-width: 768px) {
+  .s-divider.s-divider--video {
+    height: 80px;
+  }
+  .s-divider-video {
+    width: 140%;
+  }
+}
+
+/* Slightly darker block where hero ends so S-curve reads correctly */
+.about-hero .hero-overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.42));
+}
+
+/* tighten hero text spacing and add a tech accent underline */
+.about-hero .hero-title {
+  font-size: clamp(1.8rem, 4.6vw, 2.8rem);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.35rem;
+}
+.about-hero .hero-sub {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* metrics panel — darker subtle card */
+.metrics-panel {
+  background: linear-gradient(
+    180deg,
+    rgba(3, 18, 28, 0.98),
+    rgba(2, 12, 18, 0.98)
+  );
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+.metric-number {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+  color: var(--text-heading);
+}
+.metric-label {
+  opacity: 0.78;
+  font-size: 0.92rem;
+}
+
+/* subtle top border between main sections for visual separation */
+.section {
+  border-top: 0 solid transparent;
+}
+
+/* responsiveness: tighten text on narrow screens */
+@media (max-width: 768px) {
+  .lead.concise {
+    font-size: 0.98rem;
+    padding: 0 1rem;
+  }
+  .hero-s-divider {
+    height: 48px;
+  }
+}
+
+/* small accessibility tweak for hero overlay contrast when text sits on video */
+.hero-viewport .hero-overlay {
+  mix-blend-mode: multiply;
+}
+
+/* Elegant section divider */
+.section-divider {
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  margin-top: -2px;
+}
+.section-divider svg {
+  display: block;
+}
+
+/* ----------------------------------------------------------------
+  Services hover: highlight one card (scale) and softly blur siblings.
+  - Uses an `is-hover` class on the .division-services container (JS will toggle it)
+  - Smooth transitions and accessible transforms
+  ----------------------------------------------------------------*/
+
+.division-services .card {
+  transition: transform 260ms cubic-bezier(0.2, 0.9, 0.3, 1),
+    box-shadow 260ms cubic-bezier(0.2, 0.9, 0.3, 1), filter 260ms ease;
+  will-change: transform, filter;
+  transform-origin: center top;
+  position: relative;
+  z-index: 1;
+}
+
+/* normal hover (no JS) - small lift */
+.division-services .card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  z-index: 10;
+}
+
+/* When JS sets .is-hover on container => blur all cards */
+.division-services.is-hover .card {
+  filter: blur(3px) saturate(0.95) brightness(0.92);
+  transform: scale(0.995);
+  opacity: 0.88;
+}
+
+/* But keep the hovered card sharp + scaled */
+.division-services.is-hover .card:hover {
+  filter: none;
+  transform: translateY(-8px) scale(1.05);
+  opacity: 1;
+  z-index: 20;
+}
+
+/* Small accessibility: keyboard focus should get same visual as hover */
+.division-services .card:focus-within,
+.division-services .card:focus {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  outline: none;
+  z-index: 12;
+}
+
+/* ----------------------------------------------------------------
+  Division icon centring polish (ensures circular frame and centered icon)
+  ----------------------------------------------------------------*/
+
+.division-icon-wrapper {
+  width: 96px;
+  height: 96px;
+  margin: -56px auto 14px auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.01)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.48),
+    0 2px 10px rgba(11, 109, 240, 0.02) inset;
+  z-index: 6;
+}
+
+/* ensure icon bitmap fits cleanly inside circle */
+.division-icon {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  background: transparent;
+}
+
+/* ----------------------------------------------------------------
+  S-shaped decorative divider for the About section
+  ----------------------------------------------------------------*/
+
+.s-divider {
+  width: 100%;
+  height: 70px;
+  margin: 2rem 0;
+  display: block;
+  overflow: hidden;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.s-divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.s-divider path {
+  fill: rgba(3, 24, 44, 0.95);
+}
+
+/* ============================================================
+   CAPABILITIES PAGE — Custom Tab Styling (Deep Tech Ocean)
+   ============================================================ */
+
+/* ---- Tabs Navigation ---- */
+.capabilities-section .nav-pills .nav-link {
+  background: rgba(255, 255, 255, 0.06); /* subtle glass navy */
+  color: rgba(207, 234, 243, 0.85); /* soft blue-white text */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 0 6px;
+  padding: 0.55rem 1rem;
+  border-radius: 10px;
+  transition: all 180ms ease;
+}
+
+/* Hover state */
+.capabilities-section .nav-pills .nav-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-contrast);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Active tab */
+.capabilities-section .nav-pills .nav-link.active {
+  background: linear-gradient(180deg, var(--cta), var(--cta-2));
+  color: var(--text-contrast) !important;
+  border-color: rgba(50, 235, 245, 1);
+  box-shadow: 0 8px 24px rgba(11, 109, 240, 0.25);
+}
+
+/* ---- Accordion Items ---- */
+.capabilities-section .accordion-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px !important;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* Accordion header button */
+.capabilities-section .accordion-button {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-heading);
+  font-weight: 600;
+  border: none;
+  box-shadow: none;
+  transition: all 180ms ease;
+}
+
+.capabilities-section .accordion-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-contrast);
+}
+
+/* Active/open accordion */
+.capabilities-section .accordion-button:not(.collapsed) {
+  background: linear-gradient(180deg, var(--cta), var(--cta-2));
+  color: var(--text-contrast);
+  box-shadow: none;
+}
+
+/* Accordion body */
+.capabilities-section .accordion-body {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  padding: 1.2rem 1.4rem;
+}
+
+/* Nav Pills (Tabs) */
+.nav-pills .nav-link {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(207, 234, 243, 0.9);
+  border-radius: 8px;
+  margin: 4px;
+}
+
+.nav-pills .nav-link.active {
+  background: rgba(56, 223, 232, 0.35) !important;
+  color: var(--text-contrast) !important;
+  box-shadow: 0 0 12px rgba(56, 223, 232, 0.33);
+}
+
+/* Increase gap between wrapped nav-pills rows */
+.nav.nav-pills {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 16px; /* increase/decrease */
+  column-gap: 10px; /* optional */
+}
+
+/* ============================================================
+   CAPABILITIES PAGE — CUSTOM ACCORDION COLORS
+   ============================================================ */
+
+.accordion-button {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--text-body) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-shadow: none !important;
+}
+
+.accordion-button:not(.collapsed) {
+  background:  rgba(4, 30, 44, 0.9) !important; /* keep this or switch to var(--cta-accent) */
+  color: var(--text-heading) !important;
+  border-bottom: none !important;
+}
+
+.accordion-button::after {
+  filter: invert(1) brightness(1.8); /* white arrow */
+}
+
+.accordion-body {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: var(--text-body) !important;
+}
+
+/* ============================================================
+   FIX — INSIGHTS PAGE CARD VISIBILITY (Deep Tech Ocean Theme)
+   ============================================================ */
+
+/* Insight Card Base */
+.insight-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px;
+  overflow: hidden;
+  color: var(--text-body) !important;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.insight-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Insight Thumbnail */
+.insight-image {
+  height: 190px;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Text Color Fixes */
+.insight-card h5 {
+  color: var(--text-heading) !important;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.insight-card p {
+  color: rgba(207, 234, 243, 0.85) !important;
+}
+
+/* Meta row */
+.insight-meta small {
+  color: rgba(207, 234, 243, 0.65) !important;
+}
+
+/* Read More link */
+.insight-card .read-more {
+  color: var(--cta) !important;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.insight-card .read-more:hover {
+  color: var(--cta-accent) !important;
+}
+
+/* Badge styling for visibility */
+.insight-card .badge {
+  padding: 0.35rem 0.55rem;
+  font-size: 0.7rem;
+  border-radius: 6px;
+  color: #fff !important;
+}
+
+/* ============================================================
+   CONTACT PAGE — VISIBILITY FIX (Dark Mode Compatible)
+   ============================================================ */
+
+/* Ensure form container stays truly light but with readable text */
+.contact-section .bg-light {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 58, 79, 0.9),
+    rgba(4, 30, 44, 0.9)
+  ); !important;
+  color: rgba(4, 30, 44, 0.9) !important; /* deep readable navy */
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Labels: make them clearly visible */
+.contact-section .form-label {
+  color: #cfeaf3eb !important;
+  font-weight: 600;
+}
+
+/* Form input text */
+.contact-section .form-control,
+.contact-section .form-select {
+  color: #cfeaf3eb !important;
+  background-color: rgba(4, 30, 44, 0.9) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.contact-section .form-control::placeholder {
+  color: #6b7a88 !important;
+}
+
+/* Readability inside white info panel */
+.contact-info {
+  color: #cfeaf3eb !important;
+}
+
+.contact-info h4,
+.contact-info h5,
+.contact-info strong {
+  color: #cfeaf3eb !important;
+}
+
+/* Muted text fix (Bootstrap default was too faint) */
+.contact-info .text-muted,
+.contact-section .text-muted {
+  color: rgba(4, 32, 51, 0.55) !important;
+}
+
+/* Links inside the white card */
+.contact-info a {
+  color: #0b6df0 !important;
+}
+.contact-info a:hover {
+  color: #38dfe8 !important;
+}
+
+/* Submit button stays readable on white background */
+.contact-section .btn-primary {
+  color: #ffffff !important;
+}
+
+/* Better shadow for white cards on dark background */
+.contact-info,
+.contact-section .bg-light {
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.28) !important;
+}
+/* Remove accidental vertical gap caused by division-navigation */
+.division-navigation,
+.division-nav,
+.division-nav-wrapper {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* ============================================================
+   FIX — Prevent hero from stretching vertically on small screens
+   ============================================================ */
+
+.hero-viewport {
+  min-height: 56vh; /* existing behaviour */
+  max-height: 480px; /* prevents huge stretching on short windows */
+  position: relative;
+}
+
+@media (max-height: 750px) {
+  .hero-viewport {
+    min-height: 48vh; /* slightly smaller hero for short displays */
+    max-height: 420px;
+  }
+}
+
+@media (max-height: 600px) {
+  .hero-viewport {
+    min-height: 42vh;
+    max-height: 360px;
+  }
+
+  .hero-title {
+    font-size: 1.8rem !important;
+  }
+  .hero-sub {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-viewport {
+    min-height: 42vh; /* mobile-friendly */
+    max-height: 380px;
+  }
+}
+
+/* ====== HERO STABILITY/RESPONSIVENESS OVERRIDE ======
+   Place at the very end of style.css (after all other hero rules)
+   ======================================================= */
+
+.hero-viewport {
+  /* Replace min-height with a clamped explicit height */
+  min-height: unset !important;
+  height: clamp(340px, 48vh, 520px) !important;
+  max-height: 60vh !important; /* safeguard */
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+/* make sure the video fills and stays cropped (no stretching of parent) */
+.hero-viewport .hero-video {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 0 !important;
+}
+
+/* keep overlay and content properly stacked */
+.hero-viewport .hero-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+/* hero content sits above video & overlay */
+.hero-viewport .container.position-relative.z-2,
+.hero-viewport .hero-content,
+.hero-viewport .hero-title,
+.hero-viewport .hero-sub {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* smaller screens — tighter hero */
+@media (max-width: 1024px) {
+  .hero-viewport {
+    height: clamp(300px, 44vh, 460px) !important;
+    max-height: 52vh !important;
+  }
+  .hero-title {
+    font-size: clamp(1.6rem, 5vw, 2.6rem) !important;
+  }
+  .hero-sub {
+    font-size: clamp(0.9rem, 2.6vw, 1.05rem) !important;
+  }
+}
+
+/* very short viewports (laptops with short height or when devtools is open) */
+@media (max-height: 720px) {
+  .hero-viewport {
+    height: clamp(300px, 42vh, 420px) !important;
+    max-height: 56vh !important;
+  }
+}
+
+/* mobile phones */
+@media (max-width: 480px), (max-height: 600px) {
+  .hero-viewport {
+    height: clamp(260px, 40vh, 340px) !important;
+    max-height: 48vh !important;
+    padding-top: calc(var(--navH) + 8px) !important; /* keep header offset */
+    margin-top: calc(-1 * (var(--navH) + 8px)) !important;
+  }
+
+  .hero-title {
+    font-size: 1.4rem !important;
+    line-height: 1.05 !important;
+  }
+  .hero-sub {
+    font-size: 0.85rem !important;
+    max-width: 92% !important;
+  }
+}
+
+/* ===== Contact panels: dark mode / readable text =====
+   Place this at the end of style.css to override earlier rules
+*/
+.contact-section .bg-light {
+  /* dark glass card for form panel */
+  background: linear-gradient(180deg, rgba(6,58,79,0.92), rgba(4,30,44,0.95)) !important;
+  color: var(--text-body) !important; /* light body text */
+  border-color: rgba(255,255,255,0.03) !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.6) !important; /* darker shadow, not bright white */
+}
+
+/* Left form: labels and placeholders */
+.contact-section .form-label {
+  color: var(--text-body) !important;
+  font-weight: 600;
+}
+.contact-section .form-control,
+.contact-section .form-select,
+.contact-section textarea.form-control {
+  color: var(--text-body) !important;
+  background: rgba(3,24,34,0.62) !important; /* darker input fill */
+  border: 1px solid rgba(255,255,255,0.04) !important;
+  box-shadow: none !important;
+}
+.contact-section .form-control::placeholder,
+.contact-section .form-select option[disabled] {
+  color: rgba(207,234,243,0.45) !important;
+}
+
+/* Style file input to match */
+.contact-section input[type="file"] {
+  color: var(--text-body) !important;
+  background: rgba(3,24,34,0.6) !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+/* Submit button contrast on dark form */
+.contact-section .btn-primary {
+  color: #fff !important;
+  box-shadow: 0 8px 28px rgba(11,109,240,0.12) !important;
+}
+
+/* Right info card: make it match the dark glass and readable text */
+.contact-info {
+  background: linear-gradient(180deg, rgba(6,58,79,0.92), rgba(4,30,44,0.95)) !important;
+  color: var(--text-body) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.6) !important;
+}
+.contact-info h4,
+.contact-info h5,
+.contact-info strong {
+  color: var(--text-heading) !important; /* bright headings */
+}
+.contact-info p,
+.contact-info .small,
+.contact-info a {
+  color: rgba(207,234,243,0.92) !important;
+}
+.contact-info .text-muted {
+  color: rgba(207,234,243,0.56) !important;
+}
+
+/* Tweak map container so its white iframe doesn't jar the design:
+   keep rounded border and subtle border; the iframe content remains Google’s default */
+.contact-info .ratio iframe {
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* small responsive tuning: ensure contrast on narrow screens */
+@media (max-width: 991px) {
+  .contact-section .bg-light,
+  .contact-info {
+    box-shadow: 0 12px 28px rgba(0,0,0,0.56) !important;
+  }
+}
+
+/* === Fix: make Leadership / Advisory text readable on dark background ===
+   Place at the END of style.css so it overrides earlier .text-muted rules
+*/
+.leadership-section .leader-card,
+.leadership-section .advisory-board,
+.leadership-section .leader-card p,
+.leadership-section .advisory-board p,
+.leadership-section .advisory-board .text-muted {
+  color: rgba(207, 234, 243, 0.90) !important; /* light aqua — readable */
+}
+
+/* specific tweaks for the subtitle line under the name */
+.leadership-section .leader-card p.text-muted {
+  color: rgba(207, 234, 243, 0.70) !important;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* advisory board muted line — slightly lighter than default muted */
+.leadership-section .advisory-board .text-muted {
+  color: rgba(207, 234, 243, 0.70) !important;
+  font-size: 0.95rem;
+}
+
+/* ensure list items under advisory board are visible */
+.leadership-section .advisory-board ul li,
+.leadership-section .core-team .team-tag {
+  color: rgba(207, 234, 243, 0.92) !important;
+  font-weight: 500;
+}
+
+/* make the leader card background a bit darker (if needed) so contrast improves */
+.leadership-section .leader-card {
+  background: linear-gradient(180deg, rgba(6,58,79,0.92), rgba(4,30,44,0.95)) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.55) !important;
+}
+
+/* ====== Collaboration graph layout (Geomardy center + connected pillars) ====== */
+
+.ecosystem-graph {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 1rem;
+}
+
+/* Center node (Geomardy) */
+.geomardy-core-large {
+  width: 320px;
+  max-width: 92%;
+  margin: 0 auto 2.2rem;
+  background: linear-gradient(180deg, rgba(6,58,79,0.94), rgba(3,30,40,0.96));
+  border: 1px solid rgba(255,255,255,0.04);
+  color: rgba(207,234,243,0.95);
+  border-radius: 16px;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+  text-align: center;
+}
+.geomardy-core-large h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--text-heading);
+  letter-spacing: -0.01em;
+  font-weight: 800;
+}
+.geomardy-core-large p {
+  margin: .35rem 0 0;
+  color: rgba(207,234,243,0.88);
+  font-weight: 600;
+  font-size: .95rem;
+}
+
+/* Pillar row layout */
+.pillar-row {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  position: relative;
+  padding-top: 1.2rem;
+}
+
+/* Each pillar card */
+.pillar-card {
+  width: 300px;
+  max-width: 90%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  color: rgba(207,234,243,0.94);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--shadow-1);
+  text-align: center;
+  position: relative;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  flex: 0 0 300px;
+}
+.pillar-card:hover,
+.pillar-card:focus {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-2);
+  outline: none;
+}
+
+/* icons and headings inside pillar */
+.pillar-card .pillar-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--cta-accent);
+}
+.pillar-card h5 {
+  margin: 0.35rem 0 0.4rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+.pillar-card p {
+  margin: 0;
+  color: rgba(207,234,243,0.86);
+  font-size: .95rem;
+  line-height: 1.5;
+}
+
+/* Connector lines from each pillar to center node */
+/* draw a thin line that visually links each pillar to the geomardy core */
+.pillar-card::before {
+  content: "";
+  position: absolute;
+  top: -28px;               /* line starts above the pillar */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(207,234,243,0.18), rgba(207,234,243,0.05));
+  border-radius: 2px;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+/* a horizontal band under the center node to make connectors meet */
+.ecosystem-graph::after {
+  content: "";
+  display: block;
+  width: 38%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(207,234,243,0.08), rgba(207,234,243,0.02));
+  margin: -34px auto 0; /* pulls the band up to meet connectors */
+  border-radius: 2px;
+  z-index: 0;
+}
+
+/* When screen is narrower, stack pillars vertically and shorten connectors */
+@media (max-width: 900px) {
+  .pillar-row {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    padding-top: 0.6rem;
+  }
+  .pillar-card {
+    width: 86%;
+    max-width: 520px;
+  }
+  .pillar-card::before {
+    top: -18px;
+    height: 18px;
+  }
+  .ecosystem-graph::after { width: 62%; margin-top: -26px; }
+}
+
+/* Accessibility: high-contrast focus */
+.pillar-card:focus {
+  box-shadow: 0 0 0 4px rgba(11,109,240,0.12);
+  outline: none;
+}
+
+/* ==========================================
+   Collaboration Model — Center + 3 Pillars
+   ========================================== */
+
+.collab-graph {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+/* Center node */
+.collab-center {
+  background: linear-gradient(180deg, rgba(6,58,79,0.9), rgba(4,30,44,0.95));
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 1.5rem 1rem;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+  color: var(--text-body);
+  width: 340px;
+  margin: 0 auto 2rem auto;
+}
+
+.collab-center h3 {
+  margin: 0;
+  color: var(--text-heading);
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+
+/* Horizontal line below center */
+.collab-horizontal-line {
+  width: 60%;
+  height: 2px;
+  margin: -10px auto 2rem;
+  background: linear-gradient(90deg, rgba(207,234,243,0.18), rgba(207,234,243,0.05));
+  border-radius: 2px;
+}
+
+/* Pillars row */
+.collab-pillars {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Each pillar */
+.collab-pill {
+  width: 300px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 1.25rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.collab-pill:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+}
+
+/* Pillar titles */
+.collab-pill h4 {
+  color: var(--text-heading);
+  font-weight: 700;
+  margin-bottom: .6rem;
+  font-size: 1.15rem;
+}
+
+/* Connector lines above pillars */
+.collab-pill::before {
+  content: "";
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(180deg, rgba(207,234,243,0.2), rgba(207,234,243,0.05));
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .collab-horizontal-line {
+    width: 80%;
+    margin-bottom: 1.5rem;
+  }
+  .collab-pill::before {
+    height: 18px;
+    top: -18px;
+  }
+}
+
+/* ==========================================
+   Elegant Deep-Tech Section Divider
+   ========================================== */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+      90deg,
+      rgba(0, 255, 255, 0) 0%,
+      rgba(0, 255, 255, 0.25) 50%,
+      rgba(0, 255, 255, 0) 100%
+  );
+  margin: 3.5rem auto;
+  display: block;
+  opacity: 0.65;
+  max-width: 1180px;
+}
+
+/* ==========================================
+   Case-details photos strip
+   ========================================== */
+/* Horizontal gallery strip + styling */
+.gallery-strip {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* smooth on iOS */
+  scroll-snap-type: x mandatory;
+  padding: 0.5rem 0;
+  margin: 0 -1rem;            /* full-width feel inside .container */
+  padding-left: 1rem;        /* align with container padding */
+  padding-right: 1rem;
+  scrollbar-width: thin;     /* Firefox */
+}
+
+/* WebKit scrollbar styling (optional, subtle) */
+.gallery-strip::-webkit-scrollbar { height: 10px; }
+.gallery-strip::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.06);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.gallery-strip::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Each image card */
+.gallery-item {
+  flex: 0 0 auto;            /* prevents shrinking */
+  width: 420px;              /* fixed card width - responsive below */
+  height: 280px;             /* fixed card height - keeps aspect uniform */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+  scroll-snap-align: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  display: block;
+}
+
+/* Image fills the card cleanly */
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;         /* crop/cover to keep consistent framing */
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: default;
+}
+
+/* Make gallery narrower on small screens */
+@media (max-width: 900px) {
+  .gallery-item { width: 320px; height: 220px; }
+}
+@media (max-width: 560px) {
+  .gallery-item { width: 260px; height: 180px; }
+}
+
+/* Accessibility focus */
+.gallery-item:focus-within,
+.gallery-item:focus {
+  outline: 3px solid rgba(11,109,240,0.12);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.55);
+}
+
+/* End of stylesheet */

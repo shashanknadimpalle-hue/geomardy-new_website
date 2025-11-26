@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded', function(){ const obs = new IntersectionObserver((entries)=>{ entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('in-view'); obs.unobserve(entry.target); } }); }, {threshold:0.15}); document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el)); });
