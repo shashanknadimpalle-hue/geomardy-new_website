@@ -79,7 +79,7 @@ require_once __DIR__ . '/inc/header.php';
 
       <!-- Division I -->
       <div class="col-md-6">
-        <div class="division-card text-center fade-up p-5">
+        <a class="division-card text-center fade-up p-5" href="<?php echo url('solutions-division-i.php'); ?>" aria-label="Open Division I">
 
           <!-- Centered Icon -->
           <div class="division-icon-wrapper">
@@ -93,14 +93,12 @@ require_once __DIR__ . '/inc/header.php';
             systems — enabling capability creation across naval and strategic sectors.
           </p>
 
-          <a href="<?php echo url('solutions-division-i.php'); ?>"
-             class="btn btn-outline-contrast px-4">Explore Division I</a>
-        </div>
+        </a>
       </div>
 
       <!-- Division II -->
       <div class="col-md-6">
-        <div class="division-card text-center fade-up p-5">
+        <a class="division-card text-center fade-up p-5" href="<?php echo url('solutions-division-ii.php'); ?>" aria-label="Open Division II">
 
           <!-- Centered Icon -->
           <div class="division-icon-wrapper">
@@ -114,9 +112,7 @@ require_once __DIR__ . '/inc/header.php';
             from testing facilities to subsea networks and digital infrastructure.
           </p>
 
-          <a href="<?php echo url('solutions-division-ii.php'); ?>"
-             class="btn btn-outline-contrast px-4">Explore Division II</a>
-        </div>
+        </a>
       </div>
 
     </div>

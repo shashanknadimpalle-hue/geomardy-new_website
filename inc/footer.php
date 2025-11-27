@@ -5,25 +5,51 @@
 <!-- ===================== FOOTER ===================== -->
 <footer class="site-footer">
   <div class="container">
-    <div class="row align-items-center">
-
-      <!-- LEFT -->
-      <div class="col-md-6 mb-3 mb-md-0">
-        <strong class="text-uppercase" style="letter-spacing:1px;">GEOMARDY</strong>
-        <p class="small mb-0 mt-2">© <?php echo date('Y'); ?> GEOMARDY. All rights reserved.</p>
+    <div class="row gy-4">
+      <div class="col-md-4">
+        <div class="footer-brand">
+          <div class="brand-name">GEOMARDY</div>
+          <p class="small">Strengthening maritime sovereignty through innovation.</p>
+        </div>
       </div>
-
-      <!-- RIGHT -->
-      <div class="col-md-6 text-md-end">
-        <a class="small me-2" href="<?php echo url('legal.php'); ?>">Privacy</a>
-        &nbsp;|&nbsp;
-        <a class="small ms-2" 
-           href="https://in.linkedin.com/in/srinivasa-raju-jampana-32634417" 
-           target="_blank" rel="noopener noreferrer">
-          LinkedIn
-        </a>
+      <div class="col-6 col-md-2">
+        <h6 class="footer-title">Company</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="<?php echo url('about.php'); ?>">About</a></li>
+          <li><a href="<?php echo url('ecosystem.php'); ?>">Ecosystem</a></li>
+          <li><a href="<?php echo url('insights.php'); ?>">Insights</a></li>
+          <li><a href="<?php echo url('contact.php'); ?>">Contact</a></li>
+        </ul>
       </div>
-
+      <div class="col-6 col-md-3">
+        <h6 class="footer-title">Divisions</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="<?php echo url('solutions-division-i.php'); ?>">Division I</a></li>
+          <li><a href="<?php echo url('solutions-division-ii.php'); ?>">Division II</a></li>
+          <li><a href="<?php echo url('capabilities.php'); ?>">Capabilities</a></li>
+          <li><a href="<?php echo url('case-studies.php'); ?>">Case Studies</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h6 class="footer-title">Contact</h6>
+        <div class="footer-contact">
+          <div>401, Level 4, Business Bay</div>
+          <div>Visakhapatnam, Andhra Pradesh, India</div>
+          <div>530003</div>
+          <div><a href="mailto:info@geomardy.com">info@geomardy.com</a></div>
+          <div><a href="tel:+918913100086">+91 89131 00086</a></div>
+        </div>
+        <div class="social-links mt-3">
+          <a href="https://in.linkedin.com/in/srinivasa-raju-jampana-32634417" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center mt-4 pt-3 border-top">
+      <p class="small mb-0">© <?php echo date('Y'); ?> GEOMARDY. All rights reserved.</p>
+      <div class="d-flex gap-3">
+        <a class="small" href="<?php echo url('legal.php'); ?>">Privacy</a>
+        <a class="small" href="<?php echo url('contact.php'); ?>">Contact</a>
+      </div>
     </div>
   </div>
 </footer>
@@ -54,20 +80,19 @@ document.addEventListener("click", function(e) {
   function clampHero() {
     const hero = document.querySelector('.hero-viewport');
     if (!hero) return;
+    const hasVideo = !!hero.querySelector('video.hero-video');
+    const isFullHero = hero.classList.contains('about-hero') || hero.classList.contains('division-hero') || hero.classList.contains('contact-hero');
+    if (hasVideo || isFullHero) {
+      hero.style.height = '';
+      hero.style.maxHeight = '';
+      return;
+    }
 
-    // compute a safe height: between minPx and maxPx based on viewport
-    const vw = window.innerWidth;
     const vh = window.innerHeight;
-
-    // conservative bounds (adjust if you want taller or shorter)
     const minPx = 260;
     const preferred = Math.round(Math.max(minPx, Math.min(520, Math.floor(vh * 0.48))));
     const maxPx = Math.round(Math.min(620, Math.floor(vh * 0.6)));
-
-    // final height clamped
     const final = Math.max(minPx, Math.min(preferred, maxPx));
-
-    // apply inline style (takes precedence)
     hero.style.height = final + 'px';
     hero.style.maxHeight = Math.round(vh * 0.7) + 'px';
   }

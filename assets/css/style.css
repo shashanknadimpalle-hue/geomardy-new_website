@@ -19,13 +19,14 @@
   --cta: #0b6df0;
   --cta-2: #055bd6;
   --cta-accent: #38dfe8;
+  --brand-color: #e7d7b7;
 
   /* text semantics (new) */
-  --text-heading: #00ffff; /* headings, card titles */
+  --text-heading: var(--brand-color); /* headings, card titles */
   --text-body: #cfeaf3eb; /* main paragraph/body text */
   --text-muted: #cfeaf3ff; /* secondary/muted text */
   --text-contrast: #ffffff; /* on dark CTA or high contrast */
-  --text-accent: #00ffff; /* bright accent if needed */
+  --text-accent: var(--brand-color); /* bright accent aligned with palette */
 
   /* legacy alias for compatibility if some inline code expects it */
   --text-light: var(--text-accent);
@@ -336,10 +337,10 @@ main.container {
 /* Brand text (all-caps, polished spacing) */
 .navbar-sticky .navbar-brand {
   font-weight: 800;
-  color: var(--text-contrast);
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  letter-spacing: 1px;
-  font-size: 1.05rem;
+  color: var(--brand-color);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  letter-spacing: 1.6px;
+  font-size: 1.14rem;
   display: inline-block;
   margin-right: 1rem;
 }
@@ -690,6 +691,18 @@ main.container {
   color: var(--text-contrast) !important;
 }
 
+/* clickable division cards act as links */
+.division-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.division-card:focus {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 /* -------------------------
    Footer
    ------------------------- */
@@ -702,7 +715,7 @@ footer.site-footer,
   padding: 3rem 0;
 }
 .site-footer a {
-  color: rgba(2, 12, 18, 1);
+  color: rgba(207, 234, 243, 0.9);
 }
 .site-footer a:hover {
   color: var(--cta-accent);
@@ -728,6 +741,56 @@ footer.site-footer,
 }
 .footer-cta .btn-primary {
   box-shadow: 0 8px 30px rgba(11, 109, 240, 0.12);
+}
+
+.site-footer .footer-title {
+  color: var(--text-heading);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  margin-bottom: 0.75rem;
+}
+.site-footer .footer-links li {
+  margin-bottom: 0.4rem;
+}
+.site-footer .footer-links a {
+  color: rgba(207, 234, 243, 0.9);
+  text-decoration: none;
+}
+.site-footer .footer-links a:hover {
+  color: var(--text-contrast);
+  text-decoration: underline;
+}
+.site-footer .footer-brand .brand-name {
+  color: var(--text-contrast);
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  font-size: 1.1rem;
+}
+.site-footer .footer-contact {
+  color: rgba(207, 234, 243, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.site-footer .social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: var(--text-contrast);
+  text-decoration: none;
+}
+.site-footer .social-links a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-contrast);
+}
+.site-footer .footer-bottom a {
+  color: rgba(207, 234, 243, 0.9);
+}
+.site-footer .footer-bottom a:hover {
+  color: var(--cta-accent);
 }
 
 /* Quick-value strip fix */
@@ -798,7 +861,7 @@ footer.site-footer,
     font-size: 1.6rem;
   }
   .hero-viewport {
-    min-height: 42vh;
+    min-height: 56vh;
     margin-top: calc(-1 * (var(--navH) + 8px));
     padding-top: calc(var(--navH) + 8px);
   } /* keep behaviour on small screens */
@@ -806,8 +869,54 @@ footer.site-footer,
     padding: 0 1rem;
     font-size: 0.95rem;
   }
+  .hero-content {
+    padding-top: calc(var(--navH) + 16px);
+    padding-bottom: 1.5rem;
+  }
   .insight-image {
     height: 150px;
+  }
+}
+
+/* ============================
+   Mobile navbar overlay
+   ============================ */
+@media (max-width: 992px) {
+  .navbar-sticky { z-index: 9000; }
+  .navbar-sticky .navbar-collapse {
+    position: fixed;
+    top: var(--navH);
+    left: 0;
+    right: 0;
+    height: calc(100vh - var(--navH));
+    background: rgba(3, 24, 44, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 1rem 1.25rem;
+    overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .navbar-sticky .navbar-nav {
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .navbar-sticky .nav-link {
+    color: var(--text-contrast) !important;
+    font-size: 1.05rem;
+    padding: 0.6rem 0 !important;
+  }
+  /* Dropdown inside mobile menu behaves like inline list */
+  .navbar-sticky .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding-left: 0;
+  }
+  .navbar-sticky .dropdown-menu .dropdown-item {
+    color: var(--text-contrast) !important;
+    padding-left: 0;
   }
 }
 
@@ -2140,6 +2249,77 @@ textarea:focus {
 .gallery-item:focus {
   outline: 3px solid rgba(11,109,240,0.12);
   box-shadow: 0 12px 30px rgba(0,0,0,0.55);
+}
+
+/* ===== GEOMARDY MOBILE HERO FIX – FINAL OVERRIDE ===== */
+
+/* 1) Stabilize hero height on all phones */
+.hero-viewport {
+  position: relative !important;
+  width: 100% !important;
+
+  /* Correct hero height model */
+  min-height: 520px !important;
+  height: auto !important;
+
+  /* Fix header overlay issue */
+  margin-top: calc(-1 * var(--navH)) !important;
+  padding-top: var(--navH) !important;
+
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 2) Video must fill hero cleanly */
+.hero-viewport .hero-video {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 0 !important;
+}
+
+/* 3) Ensure hero text sits properly */
+.hero-content {
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 2.5rem 1rem 3rem !important;
+}
+
+/* 4) Mobile tuning – perfect spacing */
+@media (max-width: 768px) {
+  .hero-viewport {
+    min-height: 600px !important; /* give headline + buttons full breathing room */
+  }
+
+  .hero-title {
+    font-size: 1.9rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .hero-sub {
+    font-size: 0.95rem !important;
+    max-width: 90% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .hero-buttons .btn {
+    width: 100% !important;
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+/* Very small phones (iPhone SE / Android small) */
+@media (max-width: 420px) {
+  .hero-viewport {
+    min-height: 640px !important;
+  }
+  .hero-title {
+    font-size: 1.6rem !important;
+  }
 }
 
 /* End of stylesheet */

@@ -40,47 +40,56 @@ require_once __DIR__ . '/inc/division-navigation.php';
   </div>
 </section>
 
-<!-- ===================== SERVICES GRID ===================== -->
-<section class="section py-5 division-services">
+<!-- ===================== SERVICES (Accordion Pattern) ===================== -->
+<section class="section py-5 capabilities-section">
   <div class="container">
     <h2 class="text-center mb-5 fade-up">Our Services</h2>
-    <div class="row g-4">
 
-      <div class="col-md-6 fade-up">
-        <div class="card h-100 p-4 shadow-sm">
-          <h5>Marine Geophysical & Geotechnical Investigations</h5>
-          <p>These capabilities form the scientific foundation of our defence-related systems, creating dual-use value by applying marine research techniques to enhance situational and environmental awareness.</p>
+    <div class="accordion" id="divisionOneAccordion">
+      <div class="accordion-item fade-up">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#d1svc1">Marine Geophysical &amp; Geotechnical Investigations</button>
+        </h2>
+        <div id="d1svc1" class="accordion-collapse collapse show" data-bs-parent="#divisionOneAccordion">
+          <div class="accordion-body">These capabilities form the scientific foundation of our defence-related systems, creating dual-use value by applying marine research techniques to enhance situational and environmental awareness.</div>
         </div>
       </div>
 
-      <div class="col-md-6 fade-up">
-        <div class="card h-100 p-4 shadow-sm">
-          <h5>Marine Environmental & Ocean Monitoring Systems</h5>
-          <p>Our multidisciplinary marine and acoustic expertise enable us to translate environmental and oceanographic knowledge into domain awareness architectures serving both scientific and strategic objectives.</p>
+      <div class="accordion-item fade-up">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#d1svc2">Marine Environmental &amp; Ocean Monitoring Systems</button>
+        </h2>
+        <div id="d1svc2" class="accordion-collapse collapse" data-bs-parent="#divisionOneAccordion">
+          <div class="accordion-body">Our multidisciplinary marine and acoustic expertise enable us to translate environmental and oceanographic knowledge into domain awareness architectures serving both scientific and strategic objectives.</div>
         </div>
       </div>
 
-      <div class="col-md-6 fade-up">
-        <div class="card h-100 p-4 shadow-sm">
-          <h5>Subsea Cable Systems & Sensor Infrastructure</h5>
-          <p>With experience across marine operations, systems integration, and infrastructure design, Geomardy ensures that these networks serve as secure and reliable lifelines for data and power across undersea domains.</p>
+      <div class="accordion-item fade-up">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#d1svc3">Subsea Cable Systems &amp; Sensor Infrastructure</button>
+        </h2>
+        <div id="d1svc3" class="accordion-collapse collapse" data-bs-parent="#divisionOneAccordion">
+          <div class="accordion-body">With experience across marine operations, systems integration, and infrastructure design, Geomardy ensures that these networks serve as secure and reliable lifelines for data and power across undersea domains.</div>
         </div>
       </div>
 
-      <div class="col-md-6 fade-up">
-        <div class="card h-100 p-4 shadow-sm">
-          <h5>Seismic & Acoustic Modelling and Simulation</h5>
-          <p>Combining our systems engineering foundation with physics-based and data-driven modeling, these twins serve as dynamic replicas enhancing reliability, performance analysis, and system readiness across platforms and infrastructure.</p>
+      <div class="accordion-item fade-up">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#d1svc4">Seismic &amp; Acoustic Modelling and Simulation</button>
+        </h2>
+        <div id="d1svc4" class="accordion-collapse collapse" data-bs-parent="#divisionOneAccordion">
+          <div class="accordion-body">Combining our systems engineering foundation with physics-based and data-driven modeling, these twins serve as dynamic replicas enhancing reliability, performance analysis, and system readiness across platforms and infrastructure.</div>
         </div>
       </div>
 
-      <div class="col-md-12 fade-up">
-        <div class="card h-100 p-4 shadow-sm">
-          <h5>Custom Systems Engineering & Application-Specific Software</h5>
-          <p>Building on our expertise in intelligent 3D mapping and digital visualization, these systems empower real-time situational decision-making, mission planning, and lifecycle management of assets — translating ground realities into actionable intelligence.</p>
+      <div class="accordion-item fade-up">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#d1svc5">Custom Systems Engineering &amp; Application-Specific Software</button>
+        </h2>
+        <div id="d1svc5" class="accordion-collapse collapse" data-bs-parent="#divisionOneAccordion">
+          <div class="accordion-body">Building on our expertise in intelligent 3D mapping and digital visualization, these systems empower real-time situational decision-making, mission planning, and lifecycle management of assets — translating ground realities into actionable intelligence.</div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -97,45 +106,6 @@ require_once __DIR__ . '/inc/division-navigation.php';
 </section>
 
 
-<script>
-(function(){
-  const container = document.querySelector('.division-services');
-  if(!container) return;
-
-  const cards = Array.from(container.querySelectorAll('.card'));
-
-  let pointerInside = false;
-
-  // mouse enter/leave for container (desktop)
-  container.addEventListener('pointerenter', () => {
-    container.classList.add('is-hover');
-  });
-  container.addEventListener('pointerleave', () => {
-    container.classList.remove('is-hover');
-  });
-
-  // also add focus handlers for keyboard accessibility:
-  cards.forEach(card => {
-    card.addEventListener('focusin', () => container.classList.add('is-hover'));
-    card.addEventListener('focusout', () => {
-      // small timeout to allow focus to move to another card
-      setTimeout(()=> {
-        if (!container.contains(document.activeElement)) {
-          container.classList.remove('is-hover');
-        }
-      }, 10);
-    });
-
-    // make each card keyboard clickable if needed:
-    card.addEventListener('keydown', (ev) => {
-      if(ev.key === 'Enter' || ev.key === ' ') {
-        const link = card.querySelector('a, button');
-        if(link) { link.click(); ev.preventDefault(); }
-      }
-    });
-  });
-})();
-</script>
 <?php 
 require_once __DIR__ . '/inc/footer.php'; 
 ?>

@@ -11,15 +11,35 @@ if (session_status() === PHP_SESSION_NONE) {
     // detect secure transport
     $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? 0) == 443;
 
+    // sanitize cookie domain (strip port; avoid setting for localhost)
+    $rawHost = $_SERVER['HTTP_HOST'] ?? '';
+    $hostNoPort = preg_replace('/:\\d+$/', '', $rawHost);
+    $cookieDomain = (strpos($hostNoPort, '.') !== false) ? $hostNoPort : '';
+
     session_set_cookie_params([
         'lifetime' => 0,
         'path' => '/',
-        'domain' => $_SERVER['HTTP_HOST'] ?? '',
+        'domain' => $cookieDomain,
         'secure' => $isSecure,
         'httponly' => true,
         'samesite' => 'Lax'
     ]);
     session_start();
+}
+
+if (!headers_sent()) {
+    $csp = "default-src 'self'; img-src 'self' data:; media-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; frame-src 'self' https://www.google.com https://maps.google.com";
+    header('Content-Security-Policy: ' . $csp);
+    header('X-Frame-Options: DENY');
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: geolocation=(), camera=(), microphone=()');
+    header('Cross-Origin-Resource-Policy: same-origin');
+    header('Cross-Origin-Opener-Policy: same-origin');
+    $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? 0) == 443);
+    if ($isSecure) {
+        header('Strict-Transport-Security: max-age=15552000; includeSubDomains; preload');
+    }
 }
 
 /* ---------------------------
